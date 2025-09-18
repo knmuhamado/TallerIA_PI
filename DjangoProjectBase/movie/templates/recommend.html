@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Recomendador de Películas</h2>
+
+    <!-- Formulario -->
+    <form method="post" class="mb-4">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_prompt" class="form-label">
+                Ingrese el tipo de película que desea buscar (prompt):
+            </label>
+            {{ form.prompt }}
+        </div>
+        <button type="submit" class="btn btn-primary">Recomendar</button>
+    </form>
+
+    {% if recommendation %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <!-- Imagen -->
+                    <img src="{{ recommendation.image.url }}" 
+                         class="card-img-top" 
+                         alt="Movie Image" 
+                         style="max-height: 200px; object-fit: cover;">
+
+                    <!-- Info -->
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">{{ recommendation.title }}</h5>
+                        <p class="card-text">{{ recommendation.description }}</p>
+                        <p class="card-text"><strong>Género:</strong> {{ recommendation.genre }}</p>
+                        <p class="card-text"><strong>Año:</strong> {{ recommendation.year }}</p>
+                    </div>
+
+                    <!-- Similitud -->
+                    <div class="card-footer text-center">
+                        <small class="text-muted">
+                            ✅ Similitud: {{ similarity_score|floatformat:2 }} (0-1)<br>
+                            📊 Equivalente: {{ similarity_percentage }}%
+                        </small>
+                        {% if recommendation.url %}
+                            <div class="mt-2">
+                                <a href="{{ recommendation.url }}" class="btn btn-primary btn-sm">Movie Link</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock content %}
